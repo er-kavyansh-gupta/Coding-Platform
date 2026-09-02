@@ -1,0 +1,54 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: coding-platform
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:coding_platform}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      # update = safe for dev; use validate + Flyway/Liquibase migrations in real production
+      ddl-auto: ${DDL_AUTO:update}
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:ChangeThisSecretKeyInProductionToSomethingLongAndRandom123456789}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24h
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+  execution:
+    # "docker" or "local" — "local" runs compiler/interpreter directly on the host (dev only, NOT isolated)
+    mode: ${EXECUTION_MODE:local}
+    timeout-seconds: ${EXECUTION_TIMEOUT_SECONDS:5}
+    memory-limit-mb: ${EXECUTION_MEMORY_LIMIT_MB:512}
+    workdir: ${EXECUTION_WORKDIR:./exec-tmp}
+  submission:
+    rate-limit-per-minute: 5
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.codingplatform: INFO
+    org.springframework.security: WARN

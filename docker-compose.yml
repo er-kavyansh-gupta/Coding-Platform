@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: coding-platform-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: coding_platform
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: coding-platform-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: coding_platform
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      JWT_SECRET: ChangeThisSecretKeyInProductionToSomethingLongAndRandom123456789
+      CORS_ORIGINS: http://localhost:5173,http://localhost:80
+      # "local" avoids requiring Docker-in-Docker; switch to "docker" and mount
+      # /var/run/docker.sock into this container for real sandboxed execution (see README).
+      EXECUTION_MODE: local
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8080/api
+    container_name: coding-platform-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+
+volumes:
+  mysql-data:
