@@ -17,16 +17,16 @@ coding-platform/
 
 | Area | Status |
 |---|---|
-| JWT auth, role-based access (USER/ADMIN) | ✅ complete |
-| Problem CRUD, tags, hints, unlock-after-N-failures editorial | ✅ complete |
-| Code execution (compile + run per test case, timeout handling, verdicts) | ✅ complete — **two modes**, see §5 |
-| Submission history, rate limiting, streaks | ✅ complete |
-| Leaderboard (global + weekly, weighted by difficulty) | ✅ complete |
-| Personal dashboard (heatmap, language/difficulty breakdown) | ✅ complete |
-| React + Monaco editor solve page, admin panel | ✅ complete |
-| Real memory-usage measurement per submission | ⚠️ stubbed (0) in local mode — Docker mode can be extended to read `docker stats` |
-| Email verification, OAuth login | ❌ not built |
-| Automated CI/CD pipeline | ❌ not built |
+| JWT auth, role-based access (USER/ADMIN) | ✅ Completed |
+| Problem CRUD, tags, hints, unlock-after-N-failures editorial | ✅ Completed |
+| Code execution (compile + run per test case, timeout handling, verdicts) | ✅ Completed — **two modes** |
+| Submission history, rate limiting, streaks | ✅ Completed |
+| Leaderboard (global + weekly, weighted by difficulty) | ✅ Completed |
+| Personal dashboard (heatmap, language/difficulty breakdown) | ✅ Completed |
+| React + Monaco editor solve page, admin panel | ✅ Completed |
+| Real memory-usage measurement per submission | ⚠️ Stubbed (0) in local mode — Docker mode can be extended to read `docker stats` |
+| Email verification, OAuth login | ❌ Not built right now |
+| Automated CI/CD pipeline | ❌ Not built right now |
 
 ---
 
