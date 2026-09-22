@@ -45,4 +45,8 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     boolean existsByUserIdAndProblemIdAndStatusAndIsRunOnlyFalse(Long userId, Long problemId, SubmissionStatus status);
 
     long countByUserIdAndProblemIdAndIsRunOnlyFalseAndStatusNot(Long userId, Long problemId, SubmissionStatus status);
+
+    List<Submission> findByContestIdOrderBySubmittedAtAsc(Long contestId);
+
+    List<Submission> findByContestIdAndUserIdAndProblemIdOrderBySubmittedAtAsc(Long contestId, Long userId, Long problemId);
 }

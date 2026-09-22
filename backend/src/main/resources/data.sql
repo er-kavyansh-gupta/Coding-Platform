@@ -117,3 +117,32 @@ JOIN (
 ) tc
 WHERE p.title = 'Nth Fibonacci Number'
   AND NOT EXISTS (SELECT 1 FROM test_cases t WHERE t.problem_id = p.id AND t.display_order = tc.display_order);
+
+-- ---------------------------------------------------------------------------
+-- Demo contest: currently ongoing (started yesterday, ends in 6 days) so it's
+-- immediately testable after a fresh seed. Organization name is a placeholder —
+-- edit/replace via the admin Contests panel.
+-- ---------------------------------------------------------------------------
+INSERT INTO contests (title, organization_name, description, start_time, end_time, is_published, created_by_user_id, created_at)
+SELECT
+ 'Weekly Practice Contest #1',
+ 'CodeBench Community',
+ '## Weekly Practice Contest\n\nSolve as many problems as you can. Scoring is points-based with a time penalty: your score is the sum of points for every problem you solve, and ties are broken by total time taken (plus 10 penalty minutes per wrong attempt on a problem before you get it right).\n\nGood luck!',
+ DATE_SUB(NOW(), INTERVAL 1 DAY),
+ DATE_ADD(NOW(), INTERVAL 6 DAY),
+ TRUE,
+ (SELECT id FROM users WHERE username = 'admin'),
+ NOW()
+WHERE NOT EXISTS (SELECT 1 FROM contests WHERE title = 'Weekly Practice Contest #1');
+
+INSERT INTO contest_problems (contest_id, problem_id, points, display_order)
+SELECT c.id, p.id, cp.points, cp.display_order
+FROM contests c
+JOIN (
+  SELECT 'Two Sum' AS title, 100 AS points, 0 AS display_order
+  UNION ALL SELECT 'Reverse String', 100, 1
+  UNION ALL SELECT 'Nth Fibonacci Number', 200, 2
+) cp ON TRUE
+JOIN problems p ON p.title = cp.title
+WHERE c.title = 'Weekly Practice Contest #1'
+  AND NOT EXISTS (SELECT 1 FROM contest_problems x WHERE x.contest_id = c.id AND x.problem_id = p.id);

@@ -32,6 +32,8 @@ public class SubmissionService {
     private final TestCaseRepository testCaseRepository;
     private final UserRepository userRepository;
     private final CodeExecutionService executionService;
+    private final CertificateService certificateService;
+    private final ContestService contestService;
 
     @Value("${app.submission.rate-limit-per-minute:5}")
     private int rateLimitPerMinute;
@@ -42,6 +44,15 @@ public class SubmissionService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         Problem problem = problemRepository.findById(request.getProblemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Problem not found: " + request.getProblemId()));
+
+        Contest contest = null;
+        if (request.getContestId() != null) {
+            // Throws BadRequestException if the contest isn't live, the user isn't registered,
+            // or this problem isn't part of the contest. Run-only ("Run" button) is still allowed
+            // during a contest so competitors can test against sample cases without it counting.
+            var contestProblem = contestService.validateSubmissionEligibility(request.getContestId(), problem.getId(), userId);
+            contest = contestProblem.getContest();
+        }
 
         if (!request.isRunOnly()) {
             long recent = submissionRepository.countByUserIdAndProblemIdAndSubmittedAtAfter(
@@ -59,6 +70,7 @@ public class SubmissionService {
         Submission submission = Submission.builder()
                 .user(user)
                 .problem(problem)
+                .contest(contest)
                 .language(request.getLanguage())
                 .sourceCode(request.getSourceCode())
                 .isRunOnly(request.isRunOnly())
@@ -133,6 +145,7 @@ public class SubmissionService {
 
             if (!request.isRunOnly() && overall == SubmissionStatus.ACCEPTED) {
                 updateStreak(user);
+                certificateService.checkAndIssue(user);
             }
 
             return toResponse(submission, results);

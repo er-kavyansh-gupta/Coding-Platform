@@ -41,6 +41,10 @@ app:
     workdir: ${EXECUTION_WORKDIR:./exec-tmp}
   submission:
     rate-limit-per-minute: 5
+  certificates:
+    bronze-threshold: ${CERT_BRONZE_THRESHOLD:5}
+    silver-threshold: ${CERT_SILVER_THRESHOLD:15}
+    gold-threshold: ${CERT_GOLD_THRESHOLD:30}
 
 springdoc:
   swagger-ui:

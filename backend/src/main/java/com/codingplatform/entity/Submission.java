@@ -30,6 +30,11 @@ public class Submission {
     @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
 
+    /** Null for ordinary practice submissions; set when this submission was made inside a contest window. */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contest_id")
+    private Contest contest;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Language language;

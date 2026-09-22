@@ -36,6 +36,9 @@ export default function Login() {
       <p style={{ marginTop: 16, fontSize: 13, color: 'var(--text-muted)' }}>
         No account? <Link to="/register" style={{ color: 'var(--accent)' }}>Sign up</Link>
       </p>
+      <p style={{ marginTop: 24, fontSize: 12, color: 'var(--text-muted)' }}>
+        Seeded admin login: <span className="mono">admin</span> / <span className="mono">Admin@123</span>
+      </p>
     </div>
   )
 }

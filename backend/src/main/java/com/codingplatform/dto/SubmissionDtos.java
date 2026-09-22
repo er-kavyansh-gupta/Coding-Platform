@@ -20,6 +20,7 @@ public class SubmissionDtos {
         @NotBlank
         private String sourceCode;
         private boolean runOnly = false; // true = "Run" (sample cases only)
+        private Long contestId; // set when submitting inside a contest window; null for ordinary practice
     }
 
     @Data
